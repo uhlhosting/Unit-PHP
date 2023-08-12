@@ -92,5 +92,15 @@ jobs:
         UNITTMP: ${{ github.workspace }}/unit_temp
         upload_url: ${{ env.upload_url }}
 
+    - name: Publish to GitHub Packages
+      run: |
+        echo "Publishing package to GitHub Packages..."
+        package_name="unit-php${{ matrix.php_version }}.deb"
+        package_path="$UNITTMP/$package_name"
+        curl -X PUT -u ${{ github.actor }}:${{ secrets.RELEASE_TOKEN }} \
+             -H "Content-Type: application/octet-stream" \
+             --data-binary @$package_path \
+             "https://maven.pkg.github.com/${{ github.repository }}/packages/$package_name"
+
 
 
