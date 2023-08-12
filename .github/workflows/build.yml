@@ -67,5 +67,9 @@ jobs:
 
     - name: Build and install Ubuntu package
       run: |
-        dpkg-deb -b $UNITTMP/unit-php${{ matrix.php_version }}
+        dpkg-deb -b $UNITTMP/unit-php${{ matrix.php_version }} $UNITTMP/unit-php${{ matrix.php_version }}.deb
         sudo dpkg -i $UNITTMP/unit-php${{ matrix.php_version }}.deb
+
+    - name: Verify the installed packages
+      run: |
+        dpkg -l | grep unit-php${{ matrix.php_version }}
