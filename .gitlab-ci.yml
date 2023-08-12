@@ -1,0 +1,30 @@
+stages:
+  - install_dependencies
+  - build_unit
+
+variables:
+  UNIT_VERSION: "1.30.0"
+
+install_dependencies:
+  stage: install_dependencies
+  script:
+    - apt update
+    - apt install -y software-properties-common
+    - add-apt-repository -y ppa:ondrej/php
+    - apt install -y build-essential
+    - apt install -y php-dev libphp-embed
+    - apt install -y libssl-dev
+    - apt install -y libpcre2-dev
+
+build_unit:
+  stage: build_unit
+  script:
+    - wget https://unit.nginx.org/download/unit-$UNIT_VERSION.tar.gz
+    - tar -xzvf unit-$UNIT_VERSION.tar.gz
+    - cd unit-$UNIT_VERSION
+    - ./configure --modules=php
+    - make
+    - make install
+  artifacts:
+    paths:
+      - unit-$UNIT_VERSION/
