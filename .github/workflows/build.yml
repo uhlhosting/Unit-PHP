@@ -46,7 +46,7 @@ jobs:
         make php${{ matrix.php_version }}
         ls -la build/ # List the contents of the build directory
         mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
-        mv build/php${{ matrix.php_version }}.unit.so $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
+        mv build/lib/unit/modules/php${{ matrix.php_version }}.unit.so $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
 
 
 
