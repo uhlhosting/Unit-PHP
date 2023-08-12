@@ -64,6 +64,17 @@ jobs:
     - name: Verify the installed packages
       run: dpkg -l | grep unit-php${{ matrix.php_version }}
 
+    - name: Create Release and Upload Package
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        tag_name: v${{ matrix.php_version }}
+        release_name: Release unit-php${{ matrix.php_version }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+
     - name: Upload Package
       uses: actions/upload-release-asset@v1
       with:
@@ -72,14 +83,5 @@ jobs:
         asset_name: unit-php${{ matrix.php_version }}.deb
         asset_content_type: application/octet-stream
       env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} # Same token as used for creating the release
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 
-    - name: Upload Package
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: $UNITTMP/unit-php${{ matrix.php_version }}.deb
-        asset_name: unit-php${{ matrix.php_version }}.deb
-        asset_content_type: application/octet-stream
-      env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} # Same token as used for creating the release
