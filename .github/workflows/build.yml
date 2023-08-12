@@ -66,20 +66,20 @@ jobs:
 
     - name: Create Release and Upload Package
       uses: actions/create-release@v1
+      id: create_release # Adding an ID to refer to this step later
       with:
-        tag_name: refs/heads/main
-        release_name: Release refs/heads/main
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
-      env:
-        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        token: ${{ secrets.RELEASE_TOKEN }} # Using the custom token
+
 
     - name: Upload Package
       uses: actions/upload-release-asset@v1
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # Referencing the create_release step by ID
         asset_path: $UNITTMP/unit-php${{ matrix.php_version }}.deb
         asset_name: unit-php${{ matrix.php_version }}.deb
         asset_content_type: application/octet-stream
-      env:
-        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+
