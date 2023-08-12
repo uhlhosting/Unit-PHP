@@ -64,24 +64,24 @@ jobs:
     - name: Verify the installed packages
       run: dpkg -l | grep unit-php${{ matrix.php_version }}
 
-    - name: Create Release and Upload Package
+    - name: Create Release
       id: create_release
-      uses: actions/create-release@v1
-      with:
-        tag_name: v${{ matrix.php_version }}
-        release_name: Release unit-php${{ matrix.php_version }}
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      run: |
+        upload_url=$(curl -s -H "Authorization: token ${{ secrets.RELEASE_TOKEN }}" -X POST \
+          -d '{
+            "tag_name": "v${{ matrix.php_version }}",
+            "name": "Release unit-php${{ matrix.php_version }}",
+            "draft": false,
+            "prerelease": false
+          }' \
+          https://api.github.com/repos/${{ github.repository }}/releases | jq -r .upload_url)
+        echo "upload_url=${upload_url}" >> $GITHUB_STATE
 
     - name: Upload Package
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ env.UNITTMP }}/unit-php${{ matrix.php_version }}.deb
-        asset_name: unit-php${{ matrix.php_version }}.deb
-        asset_content_type: application/octet-stream
-      env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+      run: |
+        upload_url=$(grep upload_url $GITHUB_STATE | cut -d'=' -f2)
+        curl -s -H "Authorization: token ${{ secrets.RELEASE_TOKEN }}" -H "Content-Type: application/octet-stream" \
+          --data-binary "@${{ env.UNITTMP }}/unit-php${{ matrix.php_version }}.deb" \
+          "${upload_url}?name=unit-php${{ matrix.php_version }}.deb"
+
 
