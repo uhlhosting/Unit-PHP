@@ -32,23 +32,15 @@ jobs:
       run: echo "UNITTMP=${{ github.workspace }}/unit_temp" >> $GITHUB_ENV
 
     - name: Create a staging directory for the package
-      run: |
-        mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN
-        cd $UNITTMP
+      run: mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN
 
     - name: Create DEBIAN/control file
       run: |
-        mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN
         cat <<EOL > $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN/control
         Package: unit-php${{ matrix.php_version }}
         Version: 1.30.0-1~jammy
-        Comment0: Use Unit's package version for consistency: 'apt show unit | grep Version'
         Architecture: amd64
-        Comment1: To get current architecture, run 'dpkg --print-architecture'
-        Comment2: For a list of other options, run 'dpkg-architecture -L'
-        Depends: unit (= 1.30.0-1~jammy), php${{ matrix.php_version }}, libphp${{ matrix.php_version }}-embed
-        Comment3: Specify Unit's package version to avoid issues when Unit updates
-        Comment4: Again, run 'apt show unit | grep Version' to get this value
+        Depends: unit (>= 1.30.0), php${{ matrix.php_version }}, libphp${{ matrix.php_version }}-embed
         Maintainer: Viorel-Cosmin Miron <cosmin@uhl-services.ch>
         Description: Custom PHP ${{ matrix.php_version }} language module for NGINX Unit 1.30.0
         EOL
@@ -61,14 +53,8 @@ jobs:
         ./configure --prefix=/usr --statedir=/var/lib/unit --control=unix:/var/run/control.unit.sock --pid=/var/run/unit.pid --log=/var/log/unit.log --tmpdir=/var/tmp --user=unit --group=unit --tests --openssl --modulesdir=/usr/lib/unit/modules --libdir=/usr/lib/x86_64-linux-gnu --cc-opt='-g -O2 -fdebug-prefix-map=/data/builder/debuild/unit-1.30.0/pkg/deb/debuild/unit-1.30.0=. -specs=/usr/share/dpkg/no-pie-compile.specs -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fPIC'
         ./configure php --module=php${{ matrix.php_version }} --config=php-config${{ matrix.php_version }}
         make php${{ matrix.php_version }}
-        ls -la build/ # List the contents of the build directory
-        mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN # Move the files
-        mv build/lib/unit/modules/php${{ matrix.php_version }}.unit.so $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN # Final stage
-
-    - name: Install NGINX Unit
-      run: |
-        sudo apt-get update -qq
-        sudo apt-get install -y unit=1.30.0-1~jammy
+        mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN
+        mv build/lib/unit/modules/php${{ matrix.php_version }}.unit.so $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN
 
     - name: Build and install DEBIAN package
       run: |
@@ -76,27 +62,24 @@ jobs:
         sudo dpkg -i $UNITTMP/unit-php${{ matrix.php_version }}.deb
 
     - name: Verify the installed packages
-      run: |
-        dpkg -l | grep unit-php${{ matrix.php_version }}
+      run: dpkg -l | grep unit-php${{ matrix.php_version }}
 
-    - name: Create Release
-      id: create_release
+    - name: Create Release and Upload Package
       uses: actions/create-release@v1
-    env:
-      RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: refs/heads/main
+        release_name: Release refs/heads/main
         draft: false
         prerelease: false
+      env:
+        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 
-    - name: Upload Debian Package
+    - name: Upload Package
       uses: actions/upload-release-asset@v1
-    env:
-      RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # From the create_release step
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step
         asset_path: $UNITTMP/unit-php${{ matrix.php_version }}.deb
-        asset_name: unit-php${{ matrix.php_version }}-${{ github.ref }}.deb
+        asset_name: unit-php${{ matrix.php_version }}.deb
         asset_content_type: application/octet-stream
-
+      env:
+        RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
