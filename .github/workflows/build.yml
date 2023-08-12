@@ -25,7 +25,7 @@ jobs:
         sudo apt update -qq
         sudo apt install -y software-properties-common git build-essential libssl-dev libpcre2-dev ca-certificates apt-transport-https debian-archive-keyring
         sudo apt-get update -qq
-        sudo apt-get install -y libphp${{ matrix.php_version }}-embed php${{ matrix.php_version }}-dev php-dev
+        sudo apt-get install -y libphp${{ matrix.php_version }}-embed php${{ matrix.php_version }}-dev php-dev php{{ matrix.php_version }}
 
     - name: Create a staging directory for the package
       run: |
