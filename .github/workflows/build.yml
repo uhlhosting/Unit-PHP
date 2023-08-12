@@ -64,3 +64,8 @@ jobs:
         ls -la build/ # List the contents of the build directory
         mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU # Move the files
         mv build/lib/unit/modules/php${{ matrix.php_version }}.unit.so $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU # Final stage
+
+    - name: Build and install Ubuntu package
+      run: |
+        dpkg-deb -b $UNITTMP/unit-php${{ matrix.php_version }}
+        sudo dpkg -i $UNITTMP/unit-php${{ matrix.php_version }}.deb
