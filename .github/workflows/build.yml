@@ -33,13 +33,13 @@ jobs:
 
     - name: Create a staging directory for the package
       run: |
-        mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
+        mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN
         cd $UNITTMP
 
-    - name: Create UBUNTU/control file
+    - name: Create DEBIAN/control file
       run: |
-        mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
-        cat <<EOL > $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU/control
+        mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN
+        cat <<EOL > $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN/control
         Package: unit-php${{ matrix.php_version }}
         Version: 1.30.0-1~jammy
         Comment0: Use Unit's package version for consistency: 'apt show unit | grep Version'
@@ -62,10 +62,10 @@ jobs:
         ./configure php --module=php${{ matrix.php_version }} --config=php-config${{ matrix.php_version }}
         make php${{ matrix.php_version }}
         ls -la build/ # List the contents of the build directory
-        mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU # Move the files
-        mv build/lib/unit/modules/php${{ matrix.php_version }}.unit.so $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU # Final stage
+        mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN # Move the files
+        mv build/lib/unit/modules/php${{ matrix.php_version }}.unit.so $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN # Final stage
 
-    - name: Build and install Ubuntu package
+    - name: Build and install DEBIAN package
       run: |
         dpkg-deb -b $UNITTMP/unit-php${{ matrix.php_version }} $UNITTMP/unit-php${{ matrix.php_version }}.deb
         sudo dpkg -i $UNITTMP/unit-php${{ matrix.php_version }}.deb
