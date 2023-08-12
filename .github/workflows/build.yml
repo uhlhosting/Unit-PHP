@@ -78,19 +78,19 @@ jobs:
           https://api.github.com/repos/uhlhosting/Unit-PHP/releases)
         echo "API response: ${response}"
         upload_url=$(echo "${response}" | jq -r .upload_url)
-        echo "Saving upload URL: ${upload_url}"
-        echo "upload_url=${upload_url}" >> $GITHUB_STATE
+        echo "upload_url=${upload_url}" >> $GITHUB_ENV
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
 
     - name: Upload Package
       run: |
-        upload_url=$(grep upload_url $GITHUB_STATE | cut -d'=' -f2)
         echo "Uploading to URL: ${upload_url}"
         curl -s -H "Authorization: token ${{ secrets.RELEASE_TOKEN }}" -H "Content-Type: application/octet-stream" \
           --data-binary "$UNITTMP/unit-php${{ matrix.php_version }}.deb" \
           "${upload_url}?name=unit-php${{ matrix.php_version }}.deb"
       env:
         UNITTMP: ${{ github.workspace }}/unit_temp
-
+        upload_url: ${{ env.upload_url }}
 
 
 
