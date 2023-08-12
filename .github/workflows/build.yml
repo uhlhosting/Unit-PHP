@@ -28,9 +28,11 @@ jobs:
         sudo apt-get update -qq
         sudo apt-get install -y libphp${{ matrix.php_version }}-embed php${{ matrix.php_version }}-dev php${{ matrix.php_version }}
 
+    - name: Set UNITTMP environment variable
+      run: echo "UNITTMP=${{ github.workspace }}/unit_temp" >> $GITHUB_ENV
+
     - name: Create a staging directory for the package
       run: |
-        echo "UNITTMP=$(mktemp -d -p /tmp -t unit.XXXXXX)" >> $GITHUB_ENV
         mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
         cd $UNITTMP
 
@@ -46,7 +48,3 @@ jobs:
         mv build/php${{ matrix.php_version }}.unit.so $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
 
 
-    - name: Install NGINX Unit
-      run: |
-        cd unit-1.30.0
-        make install DESTDIR=${{ github.workspace }}/build
