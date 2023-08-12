@@ -3,28 +3,90 @@ stages:
   - build_unit
 
 variables:
-  UNIT_VERSION: "1.30.0"
+  UNIT_TAG: "1.30.0"
+
+cache:
+  key: unit
+  paths:
+    - unit/
 
 install_dependencies:
   stage: install_dependencies
   script:
     - apt update
-    - apt install -y software-properties-common
+    - apt install -y software-properties-common git
     - add-apt-repository -y ppa:ondrej/php
-    - apt install -y build-essential
-    - apt install -y php-dev libphp-embed
-    - apt install -y libssl-dev
-    - apt install -y libpcre2-dev
+    - apt update
+    - apt install -y build-essential libssl-dev libpcre2-dev
+    - apt install -y libphp7.4-embed libphp8.0-embed libphp8.1-embed libphp8.2-embed
 
-build_unit:
+build_unit_php74:
   stage: build_unit
   script:
-    - wget https://unit.nginx.org/download/unit-$UNIT_VERSION.tar.gz
-    - tar -xzvf unit-$UNIT_VERSION.tar.gz
-    - cd unit-$UNIT_VERSION
-    - ./configure --modules=php
+    - git clone https://github.com/nginx/unit.git
+    - git clone https://github.com/nginx/njs
+    - cd njs
+    - ./configure && make
+    - cd ../unit
+    - git checkout tags/$UNIT_TAG -b $UNIT_TAG
+    - ./configure php --module=php74 --config=/usr/lib64/php7.0/bin/php-config --lib-path=/usr/lib64/php7.0/lib64 --njs --cc-opt="-I../njs/src/ -I../njs/build/" --ld-opt="-L../njs/build/"
     - make
     - make install
   artifacts:
     paths:
-      - unit-$UNIT_VERSION/
+      - unit/
+    expire_in: 3 days
+
+build_unit_php80:
+  stage: build_unit
+  script:
+    - git clone https://github.com/nginx/unit.git
+    - git clone https://github.com/nginx/njs
+    - cd njs
+    - ./configure && make
+    - cd ../unit
+    - git checkout tags/$UNIT_TAG -b $UNIT_TAG
+    - ./configure php --module=php80 --config=/usr/lib64/php8.0/bin/php-config --lib-path=/usr/lib64/php8.0/lib64 --njs --cc-opt="-I../njs/src/ -I../njs/build/" --ld-opt="-L../njs/build/"
+    - make
+    - make install
+  artifacts:
+    paths:
+      - unit/
+    expire_in: 3 days
+
+build_unit_php81:
+  stage: build_unit
+  script:
+    - git clone https://github.com/nginx/unit.git
+    - git clone https://github.com/nginx/njs.git
+    - cd njs
+    - ./configure && make
+    - cd ../unit
+    - git checkout tags/$UNIT_TAG -b $UNIT_TAG
+    - ./configure php --module=php81 --config=/usr/lib64/php8.1/bin/php-config --lib-path=/usr/lib64/php8.1/lib64 --njs --cc-opt="-I../njs/src/ -I../njs/build/" --ld-opt="-L../njs/build/"
+    - make
+    - make install
+  artifacts:
+    paths:
+      - unit/
+    expire_in: 3 days
+
+build_unit_php82:
+  stage: build_unit
+  script:
+    - git clone https://github.com/nginx/unit.git
+    - git clone https://github.com/nginx/njs.git
+    - cd njs
+    - ./configure && make
+    - cd ../unit
+    - git checkout tags/$UNIT_TAG -b $UNIT_TAG
+    - ./configure php --module=php82 --config=/usr/lib64/php8.2/bin/php-config --lib-path=/usr/lib64/php8.2/lib64 --njs --cc-opt="-I../njs/src/ -I../njs/build/" --ld-opt="-L../njs/build/"
+    - make
+    - make install
+  artifacts:
+    paths:
+      - unit/
+    expire_in: 3 days
+# Repeat for other PHP versions, adjusting the paths as necessary
+# ...
+
