@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-20.04
-    timeout-minutes: 60 # Increase this as needed
+    timeout-minutes: 120 # Increase this as needed
     strategy:
       matrix:
         php_version: ['7.4', '8.0', '8.1', '8.2'] # Add other PHP versions here if needed
