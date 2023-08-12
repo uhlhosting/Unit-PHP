@@ -35,15 +35,21 @@ jobs:
           git clone https://github.com/nginx/njs
           cd njs
           ./configure && make
-      - name: Build NGINX Unit with PHP ${{ matrix.php_version }} and NJS support
+      - name: Clone NGINX Unit
         run: |
-          git clone https://github.com/nginx/unit
+          git clone https://github.com/nginx/unit.git
           cd unit
           git checkout tags/1.30.0 -b 1.30.0
-          ./configure php --module=php${{ matrix.php_version }} --config=/usr/lib64/php${{ matrix.php_version }}/bin/php-config --lib-path=/usr/lib64/php${{ matrix.php_version }}/lib64 --njs --cc-opt="-I../njs/src/ -I../njs/build/" --ld-opt="-L../njs/build/"
+      - name: Configure and build NGINX Unit with PHP ${{ matrix.php_version }} support
+        run: |
+          cd unit
+          ./configure php --module=php${{ matrix.php_version }} --config=/usr/lib64/php${{ matrix.php_version }}/bin/php-config --lib-path=/usr/lib64/php${{ matrix.php_version }}/lib64
           make
-          make install DESTDIR=${{ github.workspace }}/build
-
+      - name: Configure NGINX Unit with njs support
+        run: |
+          cd unit
+          ./configure --njs --cc-opt="-I../njs/src/ -I../njs/build/" --ld-opt="-L../njs/build/"
+          make
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
