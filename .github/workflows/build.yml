@@ -68,8 +68,8 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       with:
-        tag_name: release-${{ github.run_number }}
-        release_name: Release ${{ github.run_number }}
+        tag_name: unit-php${{ matrix.php_version }}-${{ github.run_number }}
+        release_name: Release unit-php${{ matrix.php_version }}-${{ github.run_number }}
         draft: false
         prerelease: false
       env:
