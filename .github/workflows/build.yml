@@ -68,12 +68,12 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ github.sha }}
+        release_name: Release ${{ github.sha }}
         draft: false
         prerelease: false
       env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} # Custom token with appropriate permissions
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Default token provided by GitHub
 
     - name: Upload Package
       uses: actions/upload-release-asset@v1
@@ -83,6 +83,8 @@ jobs:
         asset_name: unit-php${{ matrix.php_version }}.deb
         asset_content_type: application/octet-stream
       env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} # Same token as used for creating the release
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Same token as used for creating the release
+
+
 
 
