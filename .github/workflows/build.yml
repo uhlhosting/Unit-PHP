@@ -1,4 +1,4 @@
-name: Build NGINX Unit with PHP and NJS Support
+name: Build NGINX Unit with PHP Support
 
 on:
   push:
@@ -33,23 +33,23 @@ jobs:
         mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
         cd $UNITTMP
 
-    - name: Build NGINX Unit with PHP ${{ matrix.php_version }} and NJS support
+    - name: Build NGINX Unit with PHP ${{ matrix.php_version }} support
       run: |
-        git clone https://github.com/nginx/njs
-        cd njs
-        ./configure && make
-        cd ..
         git clone https://github.com/nginx/unit.git
         cd unit
         git checkout tags/1.30.0 -b 1.30.0
-        ./configure --prefix=/usr --statedir=/var/lib/unit --control=unix:/var/run/control.unit.sock --pid=/var/run/unit.pid --log=/var/log/unit.log --tmpdir=/var/tmp --user=unit --group=unit --tests --openssl --modulesdir=/usr/lib/unit/modules --libdir=/usr/lib/x86_64-linux-gnu --cc-opt='-g -O2 -fdebug-prefix-map=/data/builder/debuild/unit-1.30.0/pkg/deb/debuild/unit-1.30.0=. -specs=/usr/share/dpkg/no-pie-compile.specs -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fPIC' --ld-opt='-Wl,-Bsymbolic-functions -specs=/usr/share/dpkg/no-pie-link.specs -Wl,-z,relro -Wl,-z,now -Wl,--as-needed -pie'        ./configure php --module=php${{ matrix.php_version }} --config=php-config
+        ./configure --prefix=/usr --statedir=/var/lib/unit \
+        --control=unix:/var/run/control.unit.sock --pid=/var/run/unit.pid \
+        --log=/var/log/unit.log --tmpdir=/var/tmp \
+        --user=unit --group=unit --tests --openssl \
+        --modulesdir=/usr/lib/unit/modules --libdir=/usr/lib/x86_64-linux-gnu \
+        --cc-opt='-g -O2 -fdebug-prefix-map=/data/builder/debuild/unit-1.30.0/pkg/deb/debuild/unit-1.30.0=. -specs=/usr/share/dpkg/no-pie-compile.specs -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fPIC' --ld-opt='-Wl,-Bsymbolic-functions -specs=/usr/share/dpkg/no-pie-link.specs -Wl,-z,relro -Wl,-z,now -Wl,--as-needed -pie'
+        ./configure php --module=php${{ matrix.php_version }} --config=php-config
         make php${{ matrix.php_version }}
-        mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU # Replace with actual module path
+        mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
         mv build/php${{ matrix.php_version }}.unit.so $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
-
 
     - name: Install NGINX Unit
       run: |
         cd unit
         make install DESTDIR=${{ github.workspace }}/build
-
