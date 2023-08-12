@@ -79,3 +79,24 @@ jobs:
       run: |
         dpkg -l | grep unit-php${{ matrix.php_version }}
 
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub Actions
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Upload Debian Package
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by GitHub Actions
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # From the create_release step
+        asset_path: $UNITTMP/unit-php${{ matrix.php_version }}.deb
+        asset_name: unit-php${{ matrix.php_version }}-${{ github.ref }}.deb
+        asset_content_type: application/octet-stream
+
