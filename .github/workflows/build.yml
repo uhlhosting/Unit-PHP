@@ -1,0 +1,51 @@
+name: "Build NGINX Unit with PHP and NJS support"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  install_dependencies:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y software-properties-common git
+          sudo add-apt-repository -y ppa:ondrej/php
+          sudo apt update
+          sudo apt install -y build-essential libssl-dev libpcre2-dev
+          sudo apt install -y libphp7.4-embed libphp8.0-embed libphp8.1-embed libphp8.2-embed
+
+  build_unit:
+    needs: install_dependencies
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        php_version: ['7.0', '7.4', '8.0', '8.1', '8.2']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Clone and build NJS
+        run: |
+          git clone https://github.com/nginx/njs
+          cd njs
+          ./configure && make
+      - name: Build NGINX Unit with PHP ${{ matrix.php_version }} and NJS support
+        run: |
+          git clone https://github.com/nginx/unit
+          cd unit
+          git checkout tags/1.30.0 -b 1.30.0
+          ./configure php --module=php${{ matrix.php_version }} --config=/usr/lib64/php${{ matrix.php_version }}/bin/php-config --lib-path=/usr/lib64/php${{ matrix.php_version }}/lib64 --njs --cc-opt="-I../njs/src/ -I../njs/build/" --ld-opt="-L../njs/build/"
+          make
+          make install DESTDIR=${{ github.workspace }}/build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: unit-php${{ matrix.php_version }}
+          path: build/*
