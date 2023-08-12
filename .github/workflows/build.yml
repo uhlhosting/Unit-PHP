@@ -30,7 +30,7 @@ jobs:
 
     - name: Create a staging directory for the package
       run: |
-        export UNITTMP=$(mktemp -d -p /tmp -t unit.XXXXXX)
+        echo "UNITTMP=$(mktemp -d -p /tmp -t unit.XXXXXX)" >> $GITHUB_ENV
         mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
         cd $UNITTMP
 
@@ -44,6 +44,7 @@ jobs:
         make php${{ matrix.php_version }}
         mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
         mv build/php${{ matrix.php_version }}.unit.so $UNITTMP/unit-php${{ matrix.php_version }}/UBUNTU
+
 
     - name: Install NGINX Unit
       run: |
