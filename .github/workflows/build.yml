@@ -66,9 +66,11 @@ jobs:
 
     - name: Create Release
       run: |
+        timestamp=$(date +%s)
+        tag_name="v${{ matrix.php_version }}-${timestamp}"
         response=$(curl -s -H "Authorization: token ${{ secrets.RELEASE_TOKEN }}" -X POST \
           -d '{
-            "tag_name": "v${{ matrix.php_version }}",
+            "tag_name": "'"${tag_name}"'",
             "name": "Release unit-php${{ matrix.php_version }}",
             "draft": false,
             "prerelease": false
