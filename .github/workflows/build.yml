@@ -75,13 +75,16 @@ jobs:
             "prerelease": false
           }' \
           https://api.github.com/repos/${{ github.repository }}/releases | jq -r .upload_url)
+        echo "Saving upload URL: ${upload_url}"
         echo "upload_url=${upload_url}" >> $GITHUB_STATE
 
     - name: Upload Package
       run: |
         upload_url=$(grep upload_url $GITHUB_STATE | cut -d'=' -f2)
+        echo "Uploading to URL: ${upload_url}"
         curl -s -H "Authorization: token ${{ secrets.RELEASE_TOKEN }}" -H "Content-Type: application/octet-stream" \
           --data-binary "@${{ env.UNITTMP }}/unit-php${{ matrix.php_version }}.deb" \
           "${upload_url}?name=unit-php${{ matrix.php_version }}.deb"
+
 
 
