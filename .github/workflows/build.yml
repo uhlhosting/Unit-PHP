@@ -99,6 +99,7 @@ jobs:
         api-key: ${{ secrets.ZULIP_API_KEY }}   # Zulip API key
         organization-url: 'https://chat.uhlhosting.ch' # Your Zulip organization URL
         to: 'Reports'
+        from: 'Github'
         type: 'stream'
         topic: 'GitHub Actions'
         content: 'Build completed for PHP ${{ matrix.php_version }}. Check the [releases page](https://github.com/uhlhosting/Unit-PHP/releases) for the package.'
