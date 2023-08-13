@@ -91,3 +91,6 @@ jobs:
       env:
         UNITTMP: ${{ github.workspace }}/unit_temp
         upload_url: ${{ env.upload_url }}
+
+    - name: Zulip Send Message Action
+      uses: zulip/github-actions-zulip@v0.1.0
