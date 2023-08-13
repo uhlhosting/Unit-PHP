@@ -71,7 +71,7 @@ jobs:
         echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
         echo "pinentry-mode loopback" >> ~/.gnupg/gpg-agent.conf
         echo RELOADAGENT | gpg-connect-agent
-        echo "7AF9239FDD2E5D99D6D5EBFE5C4318AC748EB021:${{ secrets.GPG_PASSPHRASE }}" | gpg-preset-passphrase --preset
+        echo "7AF9239FDD2E5D99D6D5EBFE5C4318AC748EB021:${{ secrets.GPG_PASSPHRASE }}" |  /usr/lib/gnupg/gpg-preset-passphrase --preset
         dpkg-sig -k D3C4291DC95EBA3BF3C1B3D4ECD0B250E07D922B --sign builder $UNITTMP/unit-php${{ matrix.php_version }}.deb
       env:
         UNITTMP: ${{ github.workspace }}/unit_temp
