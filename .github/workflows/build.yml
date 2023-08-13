@@ -66,7 +66,7 @@ jobs:
 
     - name: Sign Debian package
       run: |
-        echo "${{ secrets.GPG_PASSPHRASE }}" | debsigs --sign=origin --default-key=D3C4291DC95EBA3BF3C1B3D4ECD0B250E07D922B --passphrase-fd 0 $UNITTMP/unit-php${{ matrix.php_version }}.deb
+        dpkg-sig -k D3C4291DC95EBA3BF3C1B3D4ECD0B250E07D922B --sign builder $UNITTMP/unit-php${{ matrix.php_version }}.deb
       env:
         UNITTMP: ${{ github.workspace }}/unit_temp
 
