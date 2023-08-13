@@ -64,20 +64,11 @@ jobs:
     - name: Verify the installed packages
       run: dpkg -l | grep unit-php${{ matrix.php_version }}
 
-    - name: Configure GPG
-      run: |
-        echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-        echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-        gpg-connect-agent reloadagent /bye
-
-    - name: Cache GPG passphrase
-      run: echo '${{ secrets.GPG_PASSPHRASE }}' | /usr/lib/gnupg2/gpg-preset-passphrase --preset 7AF9239FDD2E5D99D6D5EBFE5C4318AC748EB021
-
     - name: Sign Debian package
-      run: dpkg-sig -k D3C4291DC95EBA3BF3C1B3D4ECD0B250E07D922B --sign builder $UNITTMP/unit-php${{ matrix.php_version }}.deb
+      run: |
+        echo "${{ secrets.GPG_PASSPHRASE }}" | debsigs --sign=origin --default-key=D3C4291DC95EBA3BF3C1B3D4ECD0B250E07D922B --passphrase-fd 0 $UNITTMP/unit-php${{ matrix.php_version }}.deb
       env:
         UNITTMP: ${{ github.workspace }}/unit_temp
-
 
     - name: Create Release
       run: |
