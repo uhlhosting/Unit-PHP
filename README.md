@@ -1,5 +1,5 @@
 [![Build NGINX Unit with PHP Support](https://github.com/uhlhosting/Unit-PHP/actions/workflows/build.yml/badge.svg)](https://github.com/uhlhosting/Unit-PHP/actions/workflows/build.yml)
-# NGINX Unit with PHP and NJS Support
+# NGINX Unit with PHP and NJS Support [WIP]
 
 This repository contains the build configuration for NGINX Unit with support for multiple PHP versions and NJS (NGINX JavaScript). It utilizes GitLab CI/CD to automate the build process and produces separate binaries for each specified PHP version.
 
