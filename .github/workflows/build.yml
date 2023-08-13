@@ -93,7 +93,7 @@ jobs:
         upload_url: ${{ env.upload_url }}
 
     - name: Send a stream message
-      uses: yuzutech/zulip-send-message-action@main
+      uses: zulip/github-actions-zulip@v0.1.0
       with:
         username: ${{ secrets.ZULIP_USERNAME }} # Zulip username
         api-key: ${{ secrets.ZULIP_API_KEY }}   # Zulip API key
