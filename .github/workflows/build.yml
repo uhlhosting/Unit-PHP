@@ -74,7 +74,7 @@ jobs:
         gpg-connect-agent --homedir ~/.gnupg killagent /bye
         gpg-agent --homedir ~/.gnupg --daemon --options gpg-agent-temp.conf
 
-        echo "${{ secrets.GPG_PASSPHRASE }}" | gpg-preset-passphrase --preset 7AF9239FDD2E5D99D6D5EBFE5C4318AC748EB021
+        echo "${{ secrets.GPG_PASSPHRASE }}" |  /usr/lib/gnupg/gpg-preset-passphrase --preset 7AF9239FDD2E5D99D6D5EBFE5C4318AC748EB021
 
         dpkg-sig -k D3C4291DC95EBA3BF3C1B3D4ECD0B250E07D922B --sign builder $UNITTMP/unit-php${{ matrix.php_version }}.deb
 
