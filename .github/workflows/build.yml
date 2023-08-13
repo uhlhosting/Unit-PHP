@@ -77,7 +77,7 @@ jobs:
           }' \
           https://api.github.com/repos/uhlhosting/Unit-PHP/releases)
         echo "API response: ${response}"
-        upload_url=$(echo "${response}" | jq -r .upload_url)
+        upload_url=$(echo "${response}" | jq -r '.upload_url' | cut -d'{' -f1)
         echo "upload_url=${upload_url}" >> $GITHUB_ENV
       env:
         GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
