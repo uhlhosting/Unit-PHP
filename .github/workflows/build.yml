@@ -64,23 +64,23 @@ jobs:
     - name: Verify the installed packages
       run: dpkg -l | grep unit-php${{ matrix.php_version }}
 
-    - name: Sign Debian package
-      run: |
-        echo "default-cache-ttl 3600" > gpg-agent-temp.conf
-        echo "max-cache-ttl 3600" >> gpg-agent-temp.conf
-        echo "allow-loopback-pinentry" >> gpg-agent-temp.conf
-        echo "pinentry-mode loopback" >> gpg-agent-temp.conf
+# - name: Sign Debian package
+#   run: |
+#     echo "default-cache-ttl 3600" > gpg-agent-temp.conf
+#     echo "max-cache-ttl 3600" >> gpg-agent-temp.conf
+#     echo "allow-loopback-pinentry" >> gpg-agent-temp.conf
 
-        gpg-connect-agent --homedir ~/.gnupg killagent /bye
-        gpg-agent --homedir ~/.gnupg --daemon --options ./gpg-agent-temp.conf
+#     gpg-connect-agent --homedir ~/.gnupg killagent /bye
+#     gpg-agent --homedir ~/.gnupg --daemon --options ./gpg-agent-temp.conf
 
-        echo "${{ secrets.GPG_PASSPHRASE }}" | /usr/lib/gnupg/gpg-preset-passphrase --preset 7AF9239FDD2E5D99D6D5EBFE5C4318AC748EB021
+#     echo "${{ secrets.GPG_PASSPHRASE }}" | /usr/lib/gnupg/gpg-preset-passphrase --preset 7AF9239FDD2E5D99D6D5EBFE5C4318AC748EB021
 
-        dpkg-sig -k D3C4291DC95EBA3BF3C1B3D4ECD0B250E07D922B --sign builder $UNITTMP/unit-php${{ matrix.php_version }}.deb
+#     dpkg-sig -k D3C4291DC95EBA3BF3C1B3D4ECD0B250E07D922B --sign builder $UNITTMP/unit-php${{ matrix.php_version }}.deb
 
-        rm gpg-agent-temp.conf
-      env:
-        UNITTMP: ${{ github.workspace }}/unit_temp
+#     rm gpg-agent-temp.conf
+#   env:
+#     UNITTMP: ${{ github.workspace }}/unit_temp
+
 
     - name: Create Release
       run: |
