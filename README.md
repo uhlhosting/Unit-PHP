@@ -46,6 +46,9 @@ Please refer to the [LICENSE file](LICENSE) for details on the project's licensi
 
 For any questions or support, please contact the repository maintainers, or you can reach us at [our support page](https://www.yoursupportpage.com).
 
+Please ask questions, report issues, and send patches to the mailing list:
+    nginx-devel@nginx.org  [our mailing list](https://mailman.nginx.org/mailman/listinfo/nginx-devel)
+
 ## Additional Resources
 
 - [NGINX Unit Official Website](https://unit.nginx.org)
