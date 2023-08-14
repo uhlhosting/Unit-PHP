@@ -34,20 +34,33 @@ The build process requires the following dependencies:
 
 The built NGINX Unit packages are available as GitHub releases and can be [downloaded from here](https://github.com/uhlhosting/Unit-PHP/releases). Refer to the [official NGINX Unit documentation](https://unit.nginx.org/installation/) for instructions on deploying and configuring NGINX Unit with your PHP applications.
 
-## Contributing
-
-Feel free to submit issues or pull requests if you have suggestions, improvements, or bug fixes. Contributions are welcome, and guidelines are provided in the [CONTRIBUTING.md file](CONTRIBUTING.md).
-
 ## License
 
 Please refer to the [LICENSE file](LICENSE) for details on the project's licensing.
 
-## Contact
+## Community
 
-For any questions or support, please contact the repository maintainers, or you can reach us at [our support page](https://www.yoursupportpage.com).
+- The go-to place to start asking questions and share your thoughts is
+  our [Slack channel](https://community.nginx.org/joinslack).
 
-Please ask questions, report issues, and send patches to the mailing list:
-    nginx-devel@nginx.org  [our mailing list](https://mailman.nginx.org/mailman/listinfo/nginx-devel)
+- Our [GitHub issues page](https://github.com/uhlhosting/Unit-PHP/issues) offers
+  space for a more technical discussion at your own pace.
+
+- The [project map](https://github.com/orgs/nginx/projects/1) on
+  GitHub sheds some light on our current work and plans for the future.
+
+- Our [official website](https://unit.nginx.org/) may provide answers
+  not easily found otherwise.
+
+- Get involved with the project by contributing! See the
+  [contributing guide](CONTRIBUTING.md) for details.
+
+- To reach the team directly, subscribe to the
+  [mailing list](https://mailman.nginx.org/mailman/listinfo/unit).
+
+- For security issues, [email us](security-alert@nginx.org), mentioning
+  NGINX Unit in the subject and following the [CVSS
+  v3.1](https://www.first.org/cvss/v3.1/specification-document) spec.
 
 ## Additional Resources
 
