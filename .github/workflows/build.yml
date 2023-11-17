@@ -38,7 +38,7 @@ jobs:
       run: |
         cat <<EOL > $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN/control
         Package: unit-php${{ matrix.php_version }}
-        Version: 1.31.1-1-1~jammy
+        Version: 1.31.1-1~jammy
         Architecture: amd64
         Depends: unit (>= 1.31.1-1), php${{ matrix.php_version }}, libphp${{ matrix.php_version }}-embed
         Maintainer: Viorel-Cosmin Miron <cosmin@uhl-services.ch>
