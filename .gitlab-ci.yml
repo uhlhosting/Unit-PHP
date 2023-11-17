@@ -3,7 +3,7 @@ stages:
   - build_unit
 
 variables:
-  UNIT_TAG: "1.30.0"
+  UNIT_TAG: "1.31.1-1"
 
 cache:
   key: unit

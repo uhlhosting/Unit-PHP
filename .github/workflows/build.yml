@@ -38,19 +38,19 @@ jobs:
       run: |
         cat <<EOL > $UNITTMP/unit-php${{ matrix.php_version }}/DEBIAN/control
         Package: unit-php${{ matrix.php_version }}
-        Version: 1.30.0-1~jammy
+        Version: 1.31.1-1-1~jammy
         Architecture: amd64
-        Depends: unit (>= 1.30.0), php${{ matrix.php_version }}, libphp${{ matrix.php_version }}-embed
+        Depends: unit (>= 1.31.1-1), php${{ matrix.php_version }}, libphp${{ matrix.php_version }}-embed
         Maintainer: Viorel-Cosmin Miron <cosmin@uhl-services.ch>
-        Description: Custom PHP ${{ matrix.php_version }} language module for NGINX Unit 1.30.0
+        Description: Custom PHP ${{ matrix.php_version }} language module for NGINX Unit 1.31.1-1
         EOL
 
     - name: Build NGINX Unit with PHP ${{ matrix.php_version }} support
       run: |
         git clone https://github.com/nginx/unit.git
         cd unit
-        git checkout tags/1.30.0 -b 1.30.0
-        ./configure --prefix=/usr --statedir=/var/lib/unit --control=unix:/var/run/control.unit.sock --pid=/var/run/unit.pid --log=/var/log/unit.log --tmpdir=/var/tmp --user=unit --group=unit --tests --openssl --modulesdir=/usr/lib/unit/modules --libdir=/usr/lib/x86_64-linux-gnu --cc-opt='-g -O2 -fdebug-prefix-map=/data/builder/debuild/unit-1.30.0/pkg/deb/debuild/unit-1.30.0=. -specs=/usr/share/dpkg/no-pie-compile.specs -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fPIC'
+        git checkout tags/1.31.1-1 -b 1.31.1-1
+        ./configure --prefix=/usr --statedir=/var/lib/unit --control=unix:/var/run/control.unit.sock --pid=/var/run/unit.pid --log=/var/log/unit.log --tmpdir=/var/tmp --user=unit --group=unit --tests --openssl --modulesdir=/usr/lib/unit/modules --libdir=/usr/lib/x86_64-linux-gnu --cc-opt='-g -O2 -fdebug-prefix-map=/data/builder/debuild/unit-1.31.1-1/pkg/deb/debuild/unit-1.31.1-1=. -specs=/usr/share/dpkg/no-pie-compile.specs -fstack-protector-strong -Wformat -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fPIC'
         ./configure php --module=php${{ matrix.php_version }} --config=php-config${{ matrix.php_version }}
         make php${{ matrix.php_version }}
         mkdir -p $UNITTMP/unit-php${{ matrix.php_version }}/usr/lib/unit/modules
