@@ -40,7 +40,7 @@ jobs:
         Package: unit-php${{ matrix.php_version }}
         Version: 1.31.1-1~jammy
         Architecture: amd64
-        Depends: unit (>= 1.31.1-1), php${{ matrix.php_version }}, libphp${{ matrix.php_version }}-embed
+        Depends: unit (>= 1.31.1), php${{ matrix.php_version }}, libphp${{ matrix.php_version }}-embed
         Maintainer: Viorel-Cosmin Miron <cosmin@uhl-services.ch>
         Description: Custom PHP ${{ matrix.php_version }} language module for NGINX Unit 1.31.1-1
         EOL
