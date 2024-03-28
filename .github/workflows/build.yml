@@ -27,6 +27,8 @@ jobs:
     #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
     - name: Install dependencies
       run: |
+        sudo curl --output /usr/share/keyrings/nginx-keyring.gpg https://unit.nginx.org/keys/nginx-keyring.gpg
+        echo -e "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ lunar unit\ndeb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ lunar unit" | sudo tee /etc/apt/sources.list.d/unit.list
         sudo apt update -qq
         sudo apt install -y software-properties-common unit git build-essential libssl-dev libpcre2-dev ca-certificates apt-transport-https debian-archive-keyring
         sudo add-apt-repository -y ppa:ondrej/php
