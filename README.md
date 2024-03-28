@@ -9,6 +9,7 @@ This repository contains the build configuration for [NGINX Unit](https://unit.n
 - PHP 8.0
 - PHP 8.1
 - PHP 8.2
+- PHP 8.3
 
 You can find the detailed support matrix in the [official NGINX Unit documentation](https://unit.nginx.org/configuration/#php).
 
